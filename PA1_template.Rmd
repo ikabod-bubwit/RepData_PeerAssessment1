@@ -83,12 +83,37 @@ sum(is.na(activity_data$steps))
 ```
 
 ### 2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
-```{r}
 
-```
+
+Proposed Strategy of filling in missing values in the dataset  
+1. Get the mean value for each day.  
+2. Get all missing values for each day  
+3. Set missing values to mean value of the given day  
+4. For cases that mean value for the day is NA then set missing values to 0
 
 ### 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
-```{r}
+```{r fillInMissinGVals}
+gStepsPerDay <- activity_data %>% 
+    group_by(date) %>% 
+    summarize(meanStepsPerDay=mean(steps))
+
+# activity_data[activity_data$date == gStepsPerDay$date[1] & is.na(activity_data$steps),]
+testStuff <- function(x,y){
+  bNA <- activity_data$date == x & is.na(activity_data$steps)
+  if (is.na(y)){
+    activity_data[bNA, 'steps'] <- 0 
+    # a <- activity_data[,] 
+    # a$steps <- 0
+    # print(a)
+    # print(x)
+  }else{
+    # print(y)
+    activity_data[bNA, 'steps'] <- y
+  }
+}
+mapply(testStuff, 
+       gStepsPerDay$date, 
+       gStepsPerDay$meanStepsPerDay)
 
 ```
 
