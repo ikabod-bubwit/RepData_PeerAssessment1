@@ -3,19 +3,65 @@ title: "Reproducible Research: Peer Assessment 1"
 output: 
   html_document:
     keep_md: true
+    theme: journal
+    highlight: tango
+    toc: true
+    toc_float: true 
+    css: styles.css
+    code_folding: show
 ---
 
+```{r loadlibs, echo=FALSE, results='hide', message=FALSE}
+library(dplyr)
+library(ggplot2)
+```
 
-## Loading and preprocessing the data
+```{r setoptions, echo=TRUE}
+
+```
+
+## Code for reading in the dataset and/or processing the data
+```{r lpaddata, echo=TRUE}
+activity_data <- read.csv('activity.csv', na.string='NA')
+activity_data$date <- as.POSIXct(strptime(activity_data$date, '%Y-%m-%d'))
+dim(activity_data)
+# Remove all missing Values
+activity_data <- activity_data[!is.na(activity_data$steps),]
+# avgByDate <- aggregate(activity_data$steps, by=list(date=as.factor(activity_data$date)), mean)
 
 
+```
 
-## What is mean total number of steps taken per day?
+
+## Histogram of the total number of steps taken each day
+```{r}
+gStepsPerDay <- group_by(activity_data, date) %>% summarize(totalStepsPerDay=sum(steps))
+qplot(gStepsPerDay$totalStepsPerDay, 
+      geom = 'histogram', 
+      binwidth=1000, 
+      main = 'Total Steps taken each Day',
+      xlab = 'Total Steps taken per day',
+      ylab = 'Frequency',
+      fill = I('blue'),
+      col = I('red'))
+```
 
 
 
 ## What is the average daily activity pattern?
+```{r}
+gStepsPerDay <- group_by(activity_data, date) %>% 
+    summarize(avgStepsPerDay=mean(steps))
+qplot(gStepsPerDay$avgStepsPerDay, 
+      geom = 'histogram', 
+      binwidth=5, 
+      main = 'Total Steps taken each Day',
+      xlab = 'Total Steps taken per day',
+      ylab = 'Frequency',
+      fill = I('blue'),
+      col = I('red'))
 
+```
 
 
 ## Imputing missing values
