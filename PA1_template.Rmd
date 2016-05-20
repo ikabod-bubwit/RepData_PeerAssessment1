@@ -51,8 +51,8 @@ qplot(gStepsPerDay$totalStepsPerDay,
 activity_data_no_na <- activity_data[!is.na(activity_data$steps),]
 gStepsPerDay <- activity_data_no_na %>% 
     group_by(date) %>% 
-    summarize(meanStepsPerDay=mean(steps, na.rm=TRUE), medianStepsPerDay=median(steps, na.rm=TRUE))
-message('Total Number of steps per day Mean:', mean(gStepsPerDay$meanStepsPerDay), ' Median: ', median(gStepsPerDay$meanStepsPerDay))
+    summarize(sumStepsPerDay=sum(steps, na.rm=TRUE))
+message('Total Number of steps per day Mean:', mean(gStepsPerDay$sumStepsPerDay), ' Median: ', median(gStepsPerDay$sumStepsPerDay))
 ```
 
 ## What is the average daily activity pattern?
@@ -129,9 +129,15 @@ qplot(gStepsPerDay$totalStepsPerDay,
       col = I('red'))
 ```
 There was a spke with regards to the number of incidents of number of steps below 1000 steps in the histogram when we added missing values to the dataset.  
-**Calculation for mean and median total number of steps taken per day.
 
-
+**Calculation for mean and median total number of steps taken per day.**  
+```{r}
+gStepsPerDay <- new_dataset %>% 
+    group_by(date) %>% 
+    summarize(sumStepsPerDay=sum(steps, na.rm=TRUE))
+message('Total Number of steps per day Mean:', mean(gStepsPerDay$sumStepsPerDay), ' Median: ', median(gStepsPerDay$sumStepsPerDay))
+```
+There was a **significant impact on the mean value** of the total number of steps taken per day when missing values were added.  
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
