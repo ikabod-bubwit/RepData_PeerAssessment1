@@ -32,8 +32,8 @@ activity_data <- activity_data[!is.na(activity_data$steps),]
 
 ```
 
-
-## Histogram of the total number of steps taken each day
+## What is mean total number of steps taken per day?
+### 1. Histogram of the total number of steps taken each day
 ```{r}
 gStepsPerDay <- group_by(activity_data, date) %>% summarize(totalStepsPerDay=sum(steps))
 qplot(gStepsPerDay$totalStepsPerDay, 
@@ -46,21 +46,23 @@ qplot(gStepsPerDay$totalStepsPerDay,
       col = I('red'))
 ```
 
-
+### 2. Calculate and report the mean and median total number of steps taken per day
+```{r}
+gStepsPerDay <- activity_data %>% 
+    group_by(date) %>% 
+    summarize(meanStepsPerDay=mean(steps), medianStepsPerDay=median(steps, na.rm=TRUE))
+print(gStepsPerDay)
+```
 
 ## What is the average daily activity pattern?
-```{r}
-gStepsPerDay <- group_by(activity_data, date) %>% 
-    summarize(avgStepsPerDay=mean(steps))
-qplot(gStepsPerDay$avgStepsPerDay, 
-      geom = 'histogram', 
-      binwidth=5, 
-      main = 'Total Steps taken each Day',
-      xlab = 'Total Steps taken per day',
-      ylab = 'Frequency',
-      fill = I('blue'),
-      col = I('red'))
 
+### 1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+```{r}
+```
+
+
+### 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+```{r}
 ```
 
 
