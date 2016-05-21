@@ -14,6 +14,7 @@ output:
 ```{r loadlibs, echo=FALSE, results='hide', message=FALSE}
 library(dplyr)
 library(ggplot2)
+library(lattice)
 ```
 
 ```{r setoptions, echo=TRUE}
@@ -140,8 +141,25 @@ message('Total Number of steps per day Mean:', mean(gStepsPerDay$sumStepsPerDay)
 There was a **significant impact on the mean value** of the total number of steps taken per day when missing values were added.  
 
 ## Are there differences in activity patterns between weekdays and weekends?
-
+### 1. Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 ```{r}
+daysOfWeek <- weekdays(new_dataset$date)
+weekEnds <- daysOfWeek %in% c('Saturday', 'Sunday')
+daysOfWeek[weekEnds] <- 'weekend'
+daysOfWeek[!weekEnds] <- 'weekday'
+new_dataset$dayOfweek <- as.factor(daysOfWeek)
+str(new_dataset)
+```
 
+### 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+```{r}
+gStepsPerItvl <- new_dataset %>% 
+    group_by(interval, dayOfweek) %>% 
+    summarize(meanStepsPerDay=mean(steps))
+xyplot(meanStepsPerDay~interval|dayOfweek,
+       gStepsPerItvl, type='l', 
+       ylab = 'Average number of steps taken',
+       xlab = 'Interval(5 minute)',
+       layout=c(1,2))
 ```
 
